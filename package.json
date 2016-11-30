@@ -1,0 +1,28 @@
+{
+  "name": "benman",
+  "version": "1.0.0",
+  "description": "Endpoint benchmark / load testing framework using Postman collections.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Keyang Xiang <keyang.xiang@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "commander": "^2.9.0",
+    "freeport": "^1.0.5",
+    "lodash": "^4.17.2",
+    "postman-collection": "^0.5.7",
+    "postman-request": "^2.78.1-postman.3",
+    "postman-runtime": "^3.0.5",
+    "uuid": "^3.0.0"
+  },
+  "devDependencies": {
+    "v8-profiler": "^5.6.5"
+  },
+  "bin":{
+    "benman":"bin/benman.js",
+    "benman-agent":"bin/benman-agent.js"
+  }
+}
