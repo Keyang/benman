@@ -19,11 +19,12 @@ var lib = require("../lib/");
 var Benman = lib.Benman;
 var benman = new lib.Benman();
 var _ = require("lodash");
-var path=require("path").resolve(commander.args[0]);
 if (commander.benman) {
+  var path=require("path").resolve(commander.args[0]);
   var data = require(path);
   benman.importConfig(data);
 } else if (commander.postman) {
+  var path=require("path").resolve(commander.args[0]);
   var data = require(path);
   var Unit = lib.Unit;
   var unit = new Unit({
@@ -65,7 +66,7 @@ function runOnAgent(agent, cfg) {
       var result = {
         "name": res.unit.name
       };
-      result[res.unit.aggregator] = res.aggregatedResults;
+      result[res.unit.aggregator] = res.aggregatedResult;
       return result;
     }),null,2));
     
