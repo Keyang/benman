@@ -83,6 +83,7 @@ function runOnAgent(agent, cfg) {
       }
     })
 }
+console.log("main: ",process.pid);
 
 // benman.on("done",function(){
 //   console.log(_.map(benman.getUnits(),function(unit){

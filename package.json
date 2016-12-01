@@ -1,6 +1,6 @@
 {
   "name": "benman",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Endpoint benchmark / load testing framework using Postman collections.",
   "main": "index.js",
   "scripts": {
@@ -16,13 +16,14 @@
     "postman-collection": "^0.5.7",
     "postman-request": "^2.78.1-postman.3",
     "postman-runtime": "^3.0.5",
+    "request": "^2.79.0",
     "uuid": "^3.0.0"
   },
   "devDependencies": {
     "v8-profiler": "^5.6.5"
   },
-  "bin":{
-    "benman":"bin/benman.js",
-    "benman-agent":"bin/benman-agent.js"
+  "bin": {
+    "benman": "bin/benman.js",
+    "benman-agent": "bin/benman-agent.js"
   }
 }
