@@ -62,6 +62,12 @@ if (commander.agentUrl) {
 function runOnAgent(agent, cfg) {
   agent.on("finish", function (agent, results) {
     agent.destroy(); 
+    // console.log('WTF');
+    // console.log(JSON.stringify(agent));
+    // console.log('WTF aaaa');
+    // console.log('WTF');
+    // console.log(JSON.stringify(results));
+    // console.log('WTF over');
     console.log(JSON.stringify(_.map(results, function (res) {
       var result = {
         "name": res.unit.name
