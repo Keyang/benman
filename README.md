@@ -79,8 +79,15 @@ benman.Agent.createLocalAgent({
  
  
 
-# Agent
+# Agents
 
+Agents may be used to run test collections distributed across multiple machines.  Run  `benman-agent` on each machine to set it up as an Agent.
+
+Run tests on the Agent machine by specifying the host ip address and port number using the `--agent-url` option in the `benman` command
+
+```
+benman --agent-url <ip address>:<port no.> -p <name>.postman_collection.json
+```
 
 
 ## Use from Command Line 
@@ -165,12 +172,14 @@ Create Postman Collection and add all the required HTTP requests.
 
 ### Export the Collection from Postman
 
-![Alt text](./images/bCollectionSave.png?raw=true "Optional Title")
+![Alt text](./images/bCollectionCreate.png?raw=true "Create Collection")
+
+![Alt text](./images/bCollectionSave.png?raw=true "Create Collection")
 
 
 ### Export as a Collection v2 file
 
-![Alt text](./images/bCollectionExport.png?raw=true "Optional Title")
+![Alt text](./images/bCollectionExport.png?raw=true "Export Collection")
 
 This will generate a Postman Collection config json file similar to:
 
