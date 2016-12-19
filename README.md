@@ -47,7 +47,7 @@ $benman --help
 
 ## Use as library in Node.js app
 
-```
+```js
 var benman=require("benman");
 /**
 benman.Agent //agent defines where to run load testing script. It can be local or remote
@@ -75,8 +75,16 @@ benman.Agent.createLocalAgent({
 
 
 ## Start from Postman
-&nbsp;
- 
+In Postman, create basic HTTP requests.
+
+Create Postman Collection and add all the required HTTP requests.
+
+Start a Collection Runner in Postman and run the collection to confirm all HTTP requests run as expected.
+
+Export the Collection as a `Collection v2` json file.  This is the Postman config file which should be specifed using the `-p` file when running `benman`
+
+
+
  
 
 # Agents
@@ -121,9 +129,13 @@ benman --agent-url 0.0.0.0:9901 -p <name>.postman_collection.json
 
 
 # Aggregators
+
 Aggregators parse and report on results returned from the test run.
 
-The default aggregator is `timeElapse`. Other aggregators can installed using NPM
+Aggregators can be installed using NPM or you can write your own and save in the ***aggregators*** folder.  See section on ***Creating Aggregators*** below
+
+The default aggregator, stored in the ***aggregators*** folder, is `timeElapse.js`. 
+
 
 ```
 /**
@@ -160,6 +172,102 @@ Example default output for a collection with 4 HTTP requests is:
   }
 ]
 ```
+
+# Creating Aggregators
+
+Template File for creating your own Aggregator is as follows:
+
+```js
+var Aggregator = require("./Aggregator");
+var util = require("util");
+
+function customAggregatorName() {
+  Aggregator.call(this);
+}
+util.inherits(TimeElapse, Aggregator);
+
+customAggregatorName.prototype.mapEach = function (item) {
+  // ***** add code here *****
+}
+
+customAggregatorName.prototype.reduceEach = function (item, lastResult) {
+  // ***** add code here *****
+}
+
+module.exports = new TimeElapse();
+```
+
+Write your won `mapEach` and `reduceEach` functions to summarise the results returned from the test run according to your requirements.
+
+An example of the format of the `item` object returned from each test run is as follows where `summary` will be an array with an entry for each HTTP request in the Collection.
+
+```
+{
+  "hasError": false,
+  "summary": [
+    {
+      "error": null,
+      "summary": {
+        "responseCode": 200,
+        "responseBodySize": 20,
+        "responseHeaders": {
+          "access-control-allow-origin": "*",
+          "content-type": "application/json",
+          "date": "Mon, 19 Dec 2016 10:40:04 GMT",
+          "etag": "\"1773269663\"",
+          "x-powered-by": "Express",
+          "content-length": "20",
+          "connection": "Close"
+        }
+      },
+      "start": 1482144004247,
+      "end": 1482144004758,
+      "responseTime": 511
+    }
+  ],
+  "totalResponseTime": 2222,
+  "endTime": 1482144006479,
+  "startTime": 1482144001325
+}
+```
+
+For reference, examples of `mapEach` and `reduceEach` functions from the default `timeElapse` aggregator are as follows: 
+
+```
+TimeElapse.prototype.mapEach = function (item) {
+  var _ = this._;
+  return {
+    responseTime: _.get(item, "totalResponseTime"),
+    numberOfFailures: _.filter(item.summary, function (sum) {
+      return !!sum.error;
+    }).length,
+    numberOfRequests: item.summary.length
+  }
+}
+
+TimeElapse.prototype.reduceEach = function (item, lastResult) {
+  if (!lastResult) {
+    lastResult = {
+      minTime: Number.POSITIVE_INFINITY,
+      maxTime: Number.NEGATIVE_INFINITY,
+      avgTime: 0,
+      timeArr: [],
+      numberOfFailures: 0,
+      numberOfRequests: 0
+    };
+  }
+  return {
+    minTime: Math.min(lastResult.minTime, item.responseTime),
+    maxTime: Math.max(lastResult.maxTime, item.responseTime),
+    timeArr: lastResult.timeArr.push(item.responseTime) && lastResult.timeArr,
+    avgTime: lastResult.timeArr.reduce(function (a, b) { return a + b }, 0) / lastResult.timeArr.length,
+    numberOfFailures: lastResult.numberOfFailures += item.numberOfFailures,
+    numberOfRequests: lastResult.numberOfRequests += item.numberOfRequests
+  };
+}
+```
+
+
 
 # Examples
 
